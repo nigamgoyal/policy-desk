@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Policy Desk</title>
+<style>
+:root{--bg:#f5f6fa;--card:#fff;--ink:#14172b;--sub:#5b6178;--faint:#9aa0b4;--line:#e6e8f0;--acc:#4f46e5;--acc2:#eef0ff;--good:#0f9d6b;--goodbg:#e7f7f0;--warn:#b7791f;--warnbg:#fdf3e1;--bad:#d14343;--badbg:#fdecec;--ca:#d0342c;--us:#2563eb;--ct:#7c3aed}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:14px}
+.app{display:grid;grid-template-columns:232px 1fr;height:100vh}
+aside{background:#fff;border-right:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;gap:4px}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 16px}
+.logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:grid;place-items:center;color:#fff;font-weight:800}
+.brand b{display:block;font-size:15px}.brand small{color:var(--faint);font-size:11.5px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;color:var(--sub);cursor:pointer;font-weight:550}
+.nav:hover{background:#f3f4f8}.nav.on{background:var(--acc2);color:var(--acc)}
+.nav svg{width:17px;height:17px;flex-shrink:0}
+.nav .ct{margin-left:auto;font-size:11px;background:var(--badbg);color:var(--bad);padding:1px 7px;border-radius:99px;font-weight:700}
+.sec{font-size:10.5px;letter-spacing:.09em;color:var(--faint);font-weight:700;padding:14px 10px 6px}
+.me{margin-top:auto;display:flex;gap:10px;align-items:center;padding:10px;border-top:1px solid var(--line)}
+.av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px;flex-shrink:0}
+main{overflow:auto;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:12px;padding:14px 26px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:5}
+.top h1{font-size:18px}.top .sp{flex:1}
+.viewas{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--sub)}
+.sel{border:1px solid var(--line);border-radius:9px;padding:7px 10px;background:#fff;font:inherit;font-weight:600;color:var(--ink);cursor:pointer}
+.banner{background:#fff7e6;border-bottom:1px solid #f5dfb0;color:#8a5a00;font-size:12.5px;padding:8px 26px;display:none}
+.banner.on{display:block}
+.page{padding:22px 26px;display:none}.page.on{display:block}
+.seg{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px}
+.seg i{width:7px;height:7px;border-radius:50%}
+.seg.ca{background:#fdecea;color:var(--ca)}.seg.ca i{background:var(--ca)}
+.seg.us{background:#e8f0fe;color:var(--us)}.seg.us i{background:var(--us)}
+.seg.all{background:#eef0f4;color:#4b5268}.seg.all i{background:#7a8197}
+.seg.ct{background:#f2ebfe;color:var(--ct)}.seg.ct i{background:var(--ct)}
+.btn{border:0;border-radius:9px;padding:9px 14px;font:inherit;font-weight:650;cursor:pointer;background:var(--acc);color:#fff}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.btn.sm{padding:6px 10px;font-size:12.5px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px}
+
+/* Ask */
+.ask{display:grid;grid-template-columns:1fr 300px;gap:20px;max-width:1240px}
+.chat{min-height:560px;display:flex;flex-direction:column}
+.thread{flex:1;padding:22px 24px;display:flex;flex-direction:column;gap:18px}
+.q{align-self:flex-end;max-width:72%;background:var(--acc);color:#fff;padding:11px 15px;border-radius:14px 14px 4px 14px;font-size:14.5px;line-height:1.45}
+.a{max-width:86%;display:flex;gap:12px}
+.a .bub{background:#fff;border:1px solid var(--line);padding:14px 16px;border-radius:4px 14px 14px 14px;line-height:1.6;font-size:14.5px}
+.a .meta{display:flex;gap:8px;align-items:center;margin-bottom:8px;font-size:12px;color:var(--faint)}
+.cite{display:inline-flex;align-items:center;gap:4px;background:var(--acc2);color:var(--acc);border-radius:6px;padding:1px 7px;font-size:12px;font-weight:650;margin:0 2px;white-space:nowrap}
+.srcs{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+.src{border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-size:12.5px;display:flex;gap:8px;align-items:center;background:#fafbff}
+.src b{font-weight:650}
+.gapnote{margin-top:10px;background:var(--warnbg);color:var(--warn);border-radius:9px;padding:8px 11px;font-size:12.5px;font-weight:600}
+.composer{border-top:1px solid var(--line);padding:14px 16px;display:flex;gap:10px;align-items:center}
+.composer .inp{flex:1;border:1px solid var(--line);border-radius:11px;padding:12px 14px;font-size:14.5px;color:var(--ink);min-height:46px;background:#fbfbfe}
+.composer .inp.ph{color:var(--faint)}
+.side .card{padding:16px}
+.side h3{font-size:13px;margin-bottom:10px}
+.sug{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 11px;margin-bottom:8px;font:inherit;font-size:13px;cursor:pointer;color:var(--ink)}
+.sug:hover{border-color:var(--acc)}
+.who{display:flex;gap:10px;align-items:center}
+.kv{display:flex;justify-content:space-between;font-size:12.5px;padding:6px 0;border-bottom:1px solid #f1f2f6;color:var(--sub)}.kv b{color:var(--ink);font-weight:600}
+.typing span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--faint);margin-right:3px;animation:b 1s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes b{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* KB */
+.toolbar{display:flex;gap:8px;align-items:center;margin-bottom:14px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:99px;padding:6px 12px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--sub)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:11px;letter-spacing:.07em;color:var(--faint);font-weight:700;padding:11px 14px;border-bottom:1px solid var(--line);text-transform:uppercase}
+td{padding:11px 14px;border-bottom:1px solid #f1f2f6;font-size:13.5px}
+tr:hover td{background:#fafbff}
+.doc{display:flex;gap:10px;align-items:center;font-weight:600}
+.doc .ic{width:28px;height:28px;border-radius:7px;background:var(--acc2);color:var(--acc);display:grid;place-items:center;font-size:12px;font-weight:800}
+.ok{color:var(--good);font-weight:700}.muted{color:var(--faint)}
+.bar{height:6px;border-radius:9px;background:#eef0f6;overflow:hidden;width:90px}.bar i{display:block;height:100%;background:var(--acc)}
+
+/* editor */
+.ed{display:grid;grid-template-columns:1fr 290px;gap:20px;max-width:1240px}
+.paper{padding:40px 54px;line-height:1.75;font-family:Georgia,"Times New Roman",serif;font-size:15px}
+.paper h2{font-family:inherit;font-size:22px;margin-bottom:6px}
+.paper p{margin:12px 0}
+.ph{display:inline-block;background:#fff4d6;color:#8a5a00;border:1px solid #f1d58a;border-radius:6px;padding:0 6px;font-family:-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:12.5px;font-weight:700}
+.filled{background:#e9f8f1;color:#0b7a53;border-color:#a7e3c7}
+.vh .row{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f1f2f6;font-size:12.5px}
+.vh .dot{width:9px;height:9px;border-radius:50%;background:var(--acc);margin-top:5px;flex-shrink:0}
+.vh .row.old .dot{background:#cfd3e0}
+
+/* generate */
+.gen{display:grid;grid-template-columns:320px 1fr;gap:20px;max-width:1260px}
+.field{margin-bottom:12px}.field label{display:block;font-size:11.5px;color:var(--faint);font-weight:700;letter-spacing:.06em;margin-bottom:5px;text-transform:uppercase}
+.field .v{border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-weight:600;background:#fbfbfe}
+.incl{font-size:12.5px}.incl .r{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3f4f8}
+.excl{margin-top:10px;font-size:12px;color:var(--sub);background:#f6f7fb;border-radius:9px;padding:9px 11px}
+.pages{display:flex;gap:16px;overflow:hidden;padding:4px}
+.pg{width:300px;height:400px;flex-shrink:0;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 10px 30px rgba(20,23,43,.08);padding:26px 24px;font-family:Georgia,serif;font-size:10.5px;line-height:1.6;position:relative;overflow:hidden}
+.pg h4{font-size:14px;margin-bottom:8px;font-family:Georgia,serif}
+.pg .pn{position:absolute;bottom:10px;right:14px;color:var(--faint);font-family:-apple-system,Arial;font-size:9px}
+.pg .lg{display:flex;gap:6px;align-items:center;font-family:-apple-system,Arial;font-weight:800;font-size:11px;margin-bottom:18px}
+.pg .lg i{width:14px;height:14px;border-radius:4px;background:linear-gradient(135deg,#4f46e5,#7c3aed)}
+.pg .toc div{display:flex;justify-content:space-between;border-bottom:1px dotted #d6d9e4;padding:2px 0}
+.prog{height:8px;border-radius:9px;background:#eef0f6;overflow:hidden;margin:12px 0}.prog i{display:block;height:100%;width:0;background:var(--good);transition:width 1.6s ease}
+.ready{display:none;align-items:center;gap:10px;background:var(--goodbg);color:var(--good);border-radius:10px;padding:10px 12px;font-weight:700;font-size:13px}
+.ready.on{display:flex}
+
+/* gaps + usage */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;max-width:1240px}
+.kpi{padding:16px 18px}.kpi small{display:block;font-size:11px;color:var(--faint);font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+.kpi b{display:block;font-size:28px;margin:6px 0 2px;letter-spacing:-.02em}.kpi span{font-size:12px;color:var(--sub)}
+.kpi .dn{color:var(--good);font-weight:700}
+.gap{display:grid;grid-template-columns:1fr 120px 150px;gap:14px;align-items:center;padding:16px 18px;border-bottom:1px solid #f1f2f6}
+.gap b{font-size:14.5px}.gap .ex{font-size:12.5px;color:var(--sub);margin-top:4px}
+.gap .n{font-size:22px;font-weight:800}.gap .n small{display:block;font-size:11px;color:var(--faint);font-weight:600}
+.grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;max-width:1240px}
+.chart{padding:18px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 16px;border-radius:11px;font-size:13px;opacity:0;transition:.3s;z-index:20}
+.toast.on{opacity:1;transform:translateX(-50%)}
+</style></head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand"><div class="logo">P</div><div><b>Policy Desk</b><small>Harbourline Retail</small></div></div>
+  <div class="sec">EMPLOYEES</div>
+  <div class="nav on" data-p="ask"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Ask HR</div>
+  <div class="sec">HR ADMIN</div>
+  <div class="nav" data-p="kb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/></svg>Knowledge base</div>
+  <div class="nav" data-p="ed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Templates</div>
+  <div class="nav" data-p="gen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15h6"/></svg>Onboarding packs</div>
+  <div class="nav" data-p="gaps"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Gaps<span class="ct" id="gapct">4</span></div>
+  <div class="nav" data-p="use"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg>Usage</div>
+  <div class="me"><div class="av" style="background:#0f766e">JL</div><div><b style="font-size:13px">Jordan Lee</b><div style="font-size:11.5px;color:var(--faint)">HR Manager</div></div></div>
+</aside>
+<main>
+  <div class="top"><h1 id="ttl">Ask HR</h1><div class="sp"></div>
+    <div class="viewas" id="vawrap">View as
+      <select class="sel" id="viewas">
+        <option value="maya">Maya Chen · Toronto, ON</option>
+        <option value="daniel">Daniel Ortiz · Austin, TX</option>
+        <option value="priya">Priya Shah · Contractor</option>
+      </select></div>
+  </div>
+  <div class="banner" id="banner">You are viewing as <b id="bname">Daniel Ortiz</b>. Answers come from their policies only. Questions are logged as “Jordan viewing as <span id="bname2">Daniel</span>”, never as them.</div>
+
+  <!-- ASK -->
+  <section class="page on" id="p-ask">
+    <div class="ask">
+      <div class="card chat">
+        <div class="thread" id="thread"></div>
+        <div class="composer"><div class="inp ph" id="inp">Ask about leave, benefits, expenses, remote work…</div><button class="btn" id="send">Ask</button></div>
+      </div>
+      <div class="side" style="display:flex;flex-direction:column;gap:14px">
+        <div class="card"><h3>Answering for</h3>
+          <div class="who"><div class="av" id="wav" style="background:#d0342c">MC</div><div><b id="wname">Maya Chen</b><div style="font-size:12px;color:var(--faint)" id="wrole">Store Manager</div></div></div>
+          <div style="margin-top:10px" id="wseg"><span class="seg ca"><i></i>Canada · Ontario</span></div>
+          <div style="margin-top:10px"><div class="kv">Policies in scope<b id="wdocs">21</b></div><div class="kv">Start date<b id="wstart">Nov 3, 2026</b></div></div>
+        </div>
+        <div class="card"><h3>Try asking</h3>
+          <button class="sug">How many paid sick days do I get?</button>
+          <button class="sug">Can I work from Portugal for two weeks?</button>
+          <button class="sug">Can I carry over unused vacation?</button>
+          <button class="sug">How do I submit a mileage expense?</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KB -->
+  <section class="page" id="p-kb">
+    <div class="kpis">
+      <div class="card kpi"><small>Policies</small><b>41</b><span>one source for answers and packs</span></div>
+      <div class="card kpi"><small>Canada</small><b>22</b><span>incl. 6 shared with all staff</span></div>
+      <div class="card kpi"><small>United States</small><b>18</b><span>incl. 6 shared with all staff</span></div>
+      <div class="card kpi"><small>Contractors</small><b>1</b><span>contractor handbook</span></div>
+    </div>
+    <div class="toolbar"><span class="chip on" data-f="all">All</span><span class="chip" data-f="ca">Canada</span><span class="chip" data-f="us">United States</span><span class="chip" data-f="ct">Contractors</span><div style="flex:1"></div><button class="btn ghost sm">Import from Word</button><button class="btn sm">New policy</button></div>
+    <div class="card" style="max-width:1240px"><table><thead><tr><th>Policy</th><th>Who it applies to</th><th>Version</th><th>Updated</th><th>In pack</th><th>Questions (30d)</th></tr></thead><tbody id="kbrows"></tbody></table></div>
+  </section>
+
+  <!-- EDITOR -->
+  <section class="page" id="p-ed">
+    <div class="ed">
+      <div class="card">
+        <div style="display:flex;gap:10px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line)">
+          <b>Offer letter</b><span class="seg all"><i></i>All new hires</span><span style="color:var(--faint);font-size:12px">v7 · edited by Jordan Lee</span><div style="flex:1"></div>
+          <span style="font-size:12px;color:var(--sub)">Insert field:</span>
+          <span class="ph">first_name</span><span class="ph">job_title</span><span class="ph">start_date</span><span class="ph">salary</span><span class="ph">manager</span>
+          <button class="btn sm" style="margin-left:6px">Save version</button>
+        </div>
+        <div class="paper" id="paper">
+          <h2>Welcome to Harbourline, <span class="ph">first_name</span></h2>
+          <div style="color:#6b7085;font-size:13px">Offer of employment</div>
+          <p>Dear <span class="ph">first_name</span> <span class="ph">last_name</span>,</p>
+          <p>We are delighted to offer you the position of <span class="ph">job_title</span> at our <span class="ph">location</span> store, starting on <span class="ph">start_date</span>. You will report to <span class="ph">manager</span>.</p>
+          <p>Your starting salary is <span class="ph">salary</span> per year, paid bi-weekly. Your first <span class="ph">probation_period</span> are a probationary period, during which either of us may end the employment with the notice set out in your region's employment standards.</p>
+          <p>Your benefits begin on <span class="ph">benefits_start</span>. The policies that apply to you are included in this pack and are always available in Policy Desk, where you can ask questions any time.</p>
+          <p>Please sign and return this letter by <span class="ph">sign_by</span>.</p>
+          <p style="margin-top:22px">Warm regards,<br><b>Jordan Lee</b>, HR Manager</p>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="card" style="padding:16px"><h3 style="font-size:13px;margin-bottom:6px">Version history</h3>
+          <div class="vh">
+            <div class="row"><span class="dot"></span><div><b>v7 · Oct 2</b><div class="muted">Clarified probation notice by region</div></div></div>
+            <div class="row old"><span class="dot"></span><div><b>v6 · Sep 11</b><div class="muted">Added benefits start date field</div></div></div>
+            <div class="row old"><span class="dot"></span><div><b>v5 · Aug 19</b><div class="muted">Pasted from Word, formatting kept</div></div></div>
+            <div class="row old"><span class="dot"></span><div><b>v4 · Jul 30</b><div class="muted">Restore point before rewrite</div></div></div>
+          </div></div>
+        <div class="card" style="padding:16px"><h3 style="font-size:13px;margin-bottom:8px">Used in</h3>
+          <div class="kv">Onboarding packs<b>All regions</b></div><div class="kv">Assistant answers<b>Yes</b></div><div class="kv">Fields<b>10</b></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GENERATE -->
+  <section class="page" id="p-gen">
+    <div class="gen">
+      <div class="card" style="padding:18px">
+        <h3 style="font-size:15px;margin-bottom:14px">New hire</h3>
+        <div class="field"><label>Name</label><div class="v">Maya Chen</div></div>
+        <div class="field"><label>Role</label><div class="v">Store Manager</div></div>
+        <div class="field"><label>Location</label><div class="v">Toronto, ON · <span class="seg ca" style="padding:1px 7px"><i></i>Canada</span></div></div>
+        <div class="field"><label>Start date</label><div class="v">Nov 3, 2026</div></div>
+        <div class="field"><label>Salary</label><div class="v">$62,000</div></div>
+        <div class="field"><label>Manager</label><div class="v">Alex Morgan, District Manager</div></div>
+        <button class="btn" id="genbtn" style="width:100%;margin-top:6px">Generate onboarding pack</button>
+        <div class="prog"><i id="progbar"></i></div>
+        <div class="ready" id="ready">✓ Pack ready · 14 documents · 38 pages <button class="btn sm" style="margin-left:auto">Email to Maya</button></div>
+      </div>
+      <div>
+        <div class="card" style="padding:16px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr;gap:18px">
+          <div class="incl"><b style="font-size:13px">Included for Canada · Ontario</b>
+            <div class="r"><span>Offer letter (filled)</span><span class="ok">p.1</span></div><div class="r"><span>Code of Conduct</span><span class="muted">p.3</span></div>
+            <div class="r"><span>Paid Sick Days (Ontario)</span><span class="muted">p.9</span></div><div class="r"><span>Workplace Harassment (Ontario)</span><span class="muted">p.11</span></div>
+            <div class="r"><span>Benefits Overview (Canada)</span><span class="muted">p.15</span></div><div class="r"><span>+ 9 more</span><span class="muted"></span></div></div>
+          <div class="incl"><b style="font-size:13px">Left out automatically</b>
+            <div class="excl">9 US-only policies (At-Will Employment, Paid Sick Leave (US), Benefits Overview (US)…) and the Contractor Handbook. Same template, right rules for each region.</div>
+            <div class="excl" style="background:var(--goodbg);color:var(--good);font-weight:600">Checked page by page against HR's hand-built pack: identical order and layout.</div></div>
+        </div>
+        <div class="pages" id="pages">
+          <div class="pg"><div class="lg"><i></i>HARBOURLINE</div><h4>Welcome to Harbourline, <span class="ph filled">Maya</span></h4><div style="color:#777">Offer of employment</div><p style="margin-top:10px">Dear <span class="ph filled">Maya</span> <span class="ph filled">Chen</span>,</p><p>We are delighted to offer you the position of <span class="ph filled">Store Manager</span> at our <span class="ph filled">Toronto</span> store, starting on <span class="ph filled">Nov 3, 2026</span>. You will report to <span class="ph filled">Alex Morgan</span>.</p><p>Your starting salary is <span class="ph filled">$62,000</span> per year, paid bi-weekly…</p><span class="pn">1</span></div>
+          <div class="pg"><div class="lg"><i></i>HARBOURLINE</div><h4>What's in your pack</h4><div class="toc"><div><span>Offer letter</span><span>1</span></div><div><span>Code of Conduct</span><span>3</span></div><div><span>Confidentiality</span><span>7</span></div><div><span>Paid Sick Days (Ontario)</span><span>9</span></div><div><span>Workplace Harassment</span><span>11</span></div><div><span>Health &amp; Safety</span><span>13</span></div><div><span>Benefits Overview (Canada)</span><span>15</span></div><div><span>Probation Period</span><span>19</span></div><div><span>Remote Work</span><span>21</span></div><div><span>Working Abroad</span><span>24</span></div><div><span>Expense Reimbursement</span><span>27</span></div><div><span>IT Acceptable Use</span><span>31</span></div><div><span>Office Attendance</span><span>35</span></div><div><span>Whistleblower</span><span>37</span></div></div><span class="pn">2</span></div>
+          <div class="pg"><div class="lg"><i></i>HARBOURLINE</div><h4>Paid Sick Days (Ontario)</h4><p><b>1. Who this applies to.</b> All employees working in Ontario.</p><p><b>2. Entitlement.</b> You have 3 paid sick days each calendar year after two weeks of employment, plus 2 additional company-paid days.</p><p><b>3. How to use them.</b> Tell your manager as early as you can. No doctor's note is needed for the first three days.</p><p><b>4. Carry-over.</b> Unused sick days do not carry over to the next year.</p><span class="pn">9</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAPS -->
+  <section class="page" id="p-gaps">
+    <div style="max-width:1240px">
+      <div style="color:var(--sub);margin-bottom:14px;font-size:13.5px">Questions the assistant could not answer from your policies, grouped by topic. Each one is a policy you are missing or a policy people can't find.</div>
+      <div class="card" id="gaprows"></div>
+    </div>
+  </section>
+
+  <!-- USAGE -->
+  <section class="page" id="p-use">
+    <div class="kpis">
+      <div class="card kpi"><small>Questions this month</small><b>1,286</b><span>▲ 18% vs last month</span></div>
+      <div class="card kpi"><small>Answered with a citation</small><b>94%</b><span>the rest go to Gaps</span></div>
+      <div class="card kpi"><small>Cost per question</small><b>$0.021</b><span class="dn">▼ from $0.27 after caching fix</span></div>
+      <div class="card kpi"><small>Median answer time</small><b>2.8s</b><span>cached policies</span></div>
+    </div>
+    <div class="grid2">
+      <div class="card chart"><b style="font-size:13.5px">Cost per question</b><div style="font-size:12px;color:var(--faint);margin-bottom:8px">Moving who's asking after the policy text let every employee share one cached prompt</div>
+        <svg viewBox="0 0 560 220" width="100%"><g stroke="#eef0f6"><line x1="40" y1="30" x2="550" y2="30"/><line x1="40" y1="90" x2="550" y2="90"/><line x1="40" y1="150" x2="550" y2="150"/><line x1="40" y1="200" x2="550" y2="200"/></g>
+        <g fill="#9aa0b4" font-size="11" font-family="-apple-system,Arial"><text x="4" y="34">$0.30</text><text x="4" y="94">$0.20</text><text x="4" y="154">$0.10</text><text x="10" y="204">$0</text></g>
+        <polyline fill="none" stroke="#d14343" stroke-width="3" points="60,46 120,40 180,44 240,42 300,45"/>
+        <line x1="300" y1="20" x2="300" y2="200" stroke="#4f46e5" stroke-dasharray="4 4"/><text x="306" y="24" font-size="11" fill="#4f46e5" font-family="-apple-system,Arial" font-weight="700">caching fix</text>
+        <polyline fill="none" stroke="#0f9d6b" stroke-width="3" points="300,45 330,180 390,187 450,186 510,187 540,186"/>
+        <g fill="#9aa0b4" font-size="11" font-family="-apple-system,Arial"><text x="55" y="218">Aug 1</text><text x="285" y="218">Aug 26</text><text x="515" y="218">Oct 1</text></g></svg></div>
+      <div class="card chart"><b style="font-size:13.5px">Top topics this month</b>
+        <div id="topics" style="margin-top:12px"></div></div>
+    </div>
+  </section>
+</main>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+const PEOPLE={
+ maya:{name:'Maya Chen',ini:'MC',col:'#d0342c',role:'Store Manager',seg:'<span class="seg ca"><i></i>Canada · Ontario</span>',docs:22,start:'Nov 3, 2026'},
+ daniel:{name:'Daniel Ortiz',ini:'DO',col:'#2563eb',role:'Sales Associate',seg:'<span class="seg us"><i></i>United States · Texas</span>',docs:24,start:'Oct 20, 2026'},
+ priya:{name:'Priya Shah',ini:'PS',col:'#7c3aed',role:'Merchandising Contractor',seg:'<span class="seg ct"><i></i>Contractor</span>',docs:1,start:'Oct 6, 2026'}};
+let who='maya';
+const ANS={
+ 'How many paid sick days do I get?':{
+   maya:{t:'In Ontario you get <b>3 paid sick days</b> a year once you have worked here for two weeks, plus <b>2 extra company-paid days</b>, so 5 in total <span class="cite">Paid Sick Days (Ontario) §2</span>. Tell your manager as early as you can; no doctor\'s note is needed for the first three <span class="cite">§3</span>. Unused days don\'t carry over to next year <span class="cite">§4</span>.',src:[['Paid Sick Days (Ontario)','ca','§2–§4']]},
+   daniel:{t:'You earn <b>1 hour of paid sick leave for every 30 hours worked</b>, up to <b>40 hours a year</b> <span class="cite">Paid Sick Leave (US) §1</span>. You can start using it after 90 days <span class="cite">§2</span>, and up to 40 unused hours carry over into next year <span class="cite">§4</span>.',src:[['Paid Sick Leave (US)','us','§1, §2, §4']]},
+   priya:{t:'As a contractor you are not on payroll, so paid sick days don\'t apply to you. Your contract sets out how to reschedule work when you are unwell <span class="cite">Contractor Handbook §5.2</span>.',src:[['Contractor Handbook','ct','§5.2']]}},
+ 'Can I work from Portugal for two weeks?':{
+   maya:{t:'Yes, with approval. You can work from another country for up to <b>20 working days a year</b> if your manager and HR approve it at least <b>3 weeks before</b> you go <span class="cite">Working Abroad §3</span>. You stay on Canadian payroll and must be reachable during your store\'s core hours <span class="cite">§4</span>. Store-based roles need cover arranged first <span class="cite">Remote Work §2.1</span>.',src:[['Working Abroad','all','§3, §4'],['Remote Work','all','§2.1']]}},
+ 'Can I carry over unused vacation?':{
+   maya:{t:'I couldn\'t find a vacation carry-over rule in your policies, so I won\'t guess. I\'ve sent this question to HR, and you\'ll get an answer from a person.',gap:true,src:[]}}
+};
+function avatarA(){return '<div class="av" style="background:linear-gradient(135deg,#4f46e5,#7c3aed)">P</div>';}
+function setWho(w){who=w;const p=PEOPLE[w];$('wav').textContent=p.ini;$('wav').style.background=p.col;$('wname').textContent=p.name;$('wrole').textContent=p.role;$('wseg').innerHTML=p.seg;$('wdocs').textContent=p.docs;$('wstart').textContent=p.start;
+  $('viewas').value=w;const b=$('banner');if(w==='maya'){b.classList.remove('on');}else{b.classList.add('on');$('bname').textContent=p.name;$('bname2').textContent=p.name.split(' ')[0];}}
+$('viewas').addEventListener('change',e=>setWho(e.target.value));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let busy=false;
+async function ask(q){if(busy)return;busy=true;const inp=$('inp');inp.classList.remove('ph');inp.textContent='';
+  for(const ch of q){inp.textContent+=ch;await sleep(28);} await sleep(250);
+  const th=$('thread');const qd=document.createElement('div');qd.className='q';qd.textContent=q;th.appendChild(qd);inp.textContent='Ask about leave, benefits, expenses, remote work…';inp.classList.add('ph');
+  const ad=document.createElement('div');ad.className='a';ad.innerHTML=avatarA()+'<div class="bub"><div class="typing"><span></span><span></span><span></span></div></div>';th.appendChild(ad);th.scrollTop=1e6;
+  await sleep(1100);
+  const set=ANS[q]||{};const a=set[who]||set.maya;const p=PEOPLE[who];
+  const segtag=p.seg;
+  const bub=ad.querySelector('.bub');
+  bub.innerHTML='<div class="meta">'+segtag+'<span>answered from '+p.docs+' policies · 2.6s</span></div><div class="body"></div>';
+  const body=bub.querySelector('.body');const words=a.t.split(/(?=<span)|(?<=<\/span>)|\s+/);
+  // progressive reveal by tokens
+  const parts=a.t.match(/<span class="cite">.*?<\/span>|<b>.*?<\/b>|[^\s<]+|\s+/g);let html='';
+  for(const t of parts){html+=t;body.innerHTML=html;if(!/^\s+$/.test(t))await sleep(t.startsWith('<span')?90:32);}
+  if(a.src&&a.src.length){const s=document.createElement('div');s.className='srcs';s.innerHTML=a.src.map(x=>'<div class="src"><span class="seg '+x[1]+'" style="padding:1px 7px"><i></i>'+({ca:'Canada',us:'US',all:'All staff',ct:'Contractors'}[x[1]])+'</span><b>'+x[0]+'</b><span class="muted">'+x[2]+'</span></div>').join('');bub.appendChild(s);}
+  if(a.gap){const g=document.createElement('div');g.className='gapnote';g.textContent='Flagged to HR · added to Gaps (61 people have asked this)';bub.appendChild(g);$('gapct').textContent='4';}
+  busy=false;}
+document.querySelectorAll('.sug').forEach(b=>b.addEventListener('click',()=>ask(b.textContent)));
+$('send').addEventListener('click',()=>{});
+// KB
+const KB=[['Offer letter','all','template · v7','Oct 2','✓',0],['Code of Conduct','all','v4','Sep 18','✓',42],['Paid Sick Days (Ontario)','ca','v3','Sep 9','✓',188],['Paid Sick Leave (US)','us','v2','Sep 9','✓',121],['Remote Work','all','v5','Aug 28','✓',96],['Working Abroad','all','v2','Aug 28','✓',74],['Benefits Overview (Canada)','ca','v6','Sep 30','✓',133],['Benefits Overview (US)','us','v5','Sep 30','✓',110],['Workplace Harassment (Ontario)','ca','v2','Jul 14','✓',12],['Anti-Harassment (US)','us','v2','Jul 14','✓',9],['At-Will Employment','us','v1','Jun 2','✓',17],['Probation Period','ca','v3','Oct 2','✓',38],['Expense Reimbursement','all','v4','Aug 5','✓',157],['IT Acceptable Use','all','v2','May 20','✓',21],['Contractor Handbook','ct','v1','Jun 30','—',14]];
+function kb(f){$('kbrows').innerHTML=KB.filter(r=>f==='all'||r[1]===f||r[1]==='all'&&f!=='ct').map(r=>'<tr><td><div class="doc"><div class="ic">'+r[0].split(' ').map(w=>w[0]).join('').slice(0,2)+'</div>'+r[0]+'</div></td><td><span class="seg '+r[1]+'"><i></i>'+({ca:'Canada',us:'United States',all:'All staff',ct:'Contractors'}[r[1]])+'</span></td><td class="muted">'+r[2]+'</td><td class="muted">'+r[3]+'</td><td class="'+(r[4]==='✓'?'ok':'muted')+'">'+r[4]+'</td><td><div style="display:flex;gap:10px;align-items:center"><div class="bar"><i style="width:'+Math.min(100,r[5]/1.9)+'%"></i></div>'+r[5]+'</div></td></tr>').join('');}
+kb('all');
+document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');kb(c.dataset.f);}));
+// gaps
+const GAPS=[['Vacation carry-over','“Can I carry over unused vacation?” · “Do vacation days roll over?”',61,'No policy covers this'],['Statutory holidays list','“Is Family Day a paid holiday?” · “Which holidays are we closed?”',43,'No policy covers this'],['Parental leave top-up','“Does the company top up parental leave pay?”',31,'Mentioned in Benefits, no detail'],['Bereavement for extended family','“Do I get bereavement leave for my grandmother?”',18,'Policy unclear']];
+$('gaprows').innerHTML=GAPS.map(g=>'<div class="gap"><div><b>'+g[0]+'</b><div class="ex">'+g[1]+'</div><div style="margin-top:6px"><span class="seg '+(g[3].startsWith('No')?'ca':'all')+'" style="'+(g[3].startsWith('No')?'background:var(--badbg);color:var(--bad)':'')+'"><i></i>'+g[3]+'</span></div></div><div class="n">'+g[2]+'<small>people asked</small></div><div><button class="btn sm">Draft policy</button></div></div>').join('');
+// topics
+const T=[['Expenses',157],['Benefits',243],['Sick leave',309],['Remote & abroad',170],['Vacation',61],['Payroll',98]];
+$('topics').innerHTML=T.sort((a,b)=>b[1]-a[1]).map(t=>'<div style="display:grid;grid-template-columns:120px 1fr 40px;gap:10px;align-items:center;margin:9px 0;font-size:12.5px"><span>'+t[0]+'</span><div class="bar" style="width:100%;height:9px"><i style="width:'+(t[1]/3.1)+'%;'+(t[0]==='Vacation'?'background:var(--warn)':'')+'"></i></div><b>'+t[1]+'</b></div>').join('');
+// nav
+const TT={ask:'Ask HR',kb:'Knowledge base',ed:'Templates',gen:'Onboarding packs',gaps:'Gaps',use:'Usage'};
+function go(p){document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('on',n.dataset.p===p));document.querySelectorAll('.page').forEach(s=>s.classList.toggle('on',s.id==='p-'+p));$('ttl').textContent=TT[p];$('vawrap').style.visibility=p==='ask'?'visible':'hidden';$('banner').style.display=p==='ask'?'':'none';}
+document.querySelectorAll('.nav').forEach(n=>n.addEventListener('click',()=>go(n.dataset.p)));
+$('genbtn').addEventListener('click',async()=>{$('progbar').style.width='100%';await sleep(1700);$('ready').classList.add('on');});
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2200);}
+
+</script>
+</body></html>

@@ -1,0 +1,39 @@
+1
+00:00:00,500 --> 00:00:06,570
+Your HR team answers the same policy questions every day. And every new hire gets a packet built by hand.
+
+2
+00:00:07,000 --> 00:00:11,830
+Policy Desk answers employees instantly, and every answer cites the exact policy.
+
+3
+00:00:16,000 --> 00:00:20,450
+Ask the same question as a US employee, and you get the US rules, not Ontario's.
+
+4
+00:00:25,900 --> 00:00:29,590
+If no policy covers it, it says so, and sends the question to HR.
+
+5
+00:00:32,300 --> 00:00:35,560
+Every policy lives in one place, tagged by who it applies to.
+
+6
+00:00:39,400 --> 00:00:43,080
+The offer letter is a template, with fields filled in for each new hire.
+
+7
+00:00:44,400 --> 00:00:48,390
+One click builds the whole onboarding packet, with only the policies that apply.
+
+8
+00:00:51,800 --> 00:00:55,140
+Unanswered questions show you exactly which policies are missing.
+
+9
+00:00:55,400 --> 00:00:58,800
+And after one caching fix, each answer costs about two cents.
+
+10
+00:01:00,200 --> 00:01:04,740
+Built for HR teams across Canada and the US. Want this for yours? Let's talk.
